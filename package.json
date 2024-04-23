@@ -1,0 +1,18 @@
+{
+  "name": "reinfolib-site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "maplibre-gl": "4.1.3",
+    "@maplibre/maplibre-gl-inspect": "1.6.3"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
