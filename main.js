@@ -108,7 +108,6 @@ map.on('load', async () => {
     }
   })
   map.on('click', 'reinfolib-fill', (e) => {
-    console.log(e)
     const coordinates = e.lngLat
     const properties = e.features[0].properties
     let description = ''
