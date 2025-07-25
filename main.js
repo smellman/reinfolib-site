@@ -7,14 +7,11 @@ import MaplibreInspect from '@maplibre/maplibre-gl-inspect'
 const apikey = 'your-api-key-here'
 
 maplibregl.addProtocol('reinfolib', async (params, abortController) => {
-  // Not working now
-  // const headers = {
-  //   'Ocp-Apim-Subscription-Key': apikey
-  // }
-  // const url = `https://${params.url.split("://")[1]}`
-  // const response = await fetch(url, {headers, signal: abortController.signal})
-  const url = `http://127.0.0.1:8000/proxy/${params.url.split("://")[1]}`
-  const response = await fetch(url, {signal: abortController.signal})
+  const headers = {
+    'Ocp-Apim-Subscription-Key': apikey
+  }
+  const url = `http://reinfolib-proxy/reinfolib-proxy/${params.url.split("://")[1]}`
+  const response = await fetch(url, {headers, signal: abortController.signal})
   if (response.status == 200) {
     const buffer = await response.arrayBuffer()
     return {data: buffer}
