@@ -4,7 +4,7 @@ import '@maplibre/maplibre-gl-inspect/dist/maplibre-gl-inspect.css'
 import maplibregl, {addProtocol} from 'maplibre-gl'
 import MaplibreInspect from '@maplibre/maplibre-gl-inspect'
 
-const apikey = 'your-api-key-here'
+const apikey = import.meta.env.VITE_API_KEY
 
 maplibregl.addProtocol('reinfolib', async (params, abortController) => {
   const headers = {
@@ -41,7 +41,7 @@ map.addControl(new MaplibreInspect({
 map.on('load', async () => {
   const image = await map.loadImage('https://maplibre.org/maplibre-gl-js/docs/assets/custom_marker.png');
   map.addImage('custom-marker', image.data);
-  map.addSource('reinfolib', {
+  map.addSource('reinfolib-XPT001', {
     type: 'vector',
     tiles: ['reinfolib://ex-api/external/XPT001?response_format=pbf&z={z}&x={x}&y={y}&from=20183&to=20234'],
     // Not working now
@@ -50,11 +50,10 @@ map.on('load', async () => {
     maxzoom: 15,
     attribution: '<a href="https://www.reinfolib.mlit.go.jp/">国土交通省 不動産情報ライブラリ</a>'
   })
-  console.log(map.getSource('reinfolib'))
   map.addLayer({
     id: 'reinfolib-points',
     type: 'symbol',
-    source: 'reinfolib',
+    source: 'reinfolib-XPT001',
     'source-layer': 'hits',
     layout: {
       'icon-image': 'custom-marker',
@@ -70,6 +69,48 @@ map.on('load', async () => {
     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
     }
+    let description = ''
+    for (const [key, value] of Object.entries(properties)) {
+      description += `<strong>${key}</strong>: ${value}`
+    }
+
+    new maplibregl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(description)
+        .addTo(map);
+  })
+  map.addSource('reinfolib-XKT002', {
+    type: 'vector',
+    tiles: ['reinfolib://ex-api/external/XKT002?response_format=pbf&z={z}&x={x}&y={y}&from=20183&to=20234'],
+    // Not working now
+    // tiles: ['reinfolib://www.reinfolib.mlit.go.jp/ex-api/external/XKT002?response_format=pbf&z={z}&x={x}&y={y}&from=20183&to=20234'],
+    minzoom: 11,
+    maxzoom: 15,
+    attribution: '<a href="https://www.reinfolib.mlit.go.jp/">国土交通省 不動産情報ライブラリ</a>'
+  })
+  map.addLayer({
+    id: 'reinfolib-fill',
+    type: 'fill',
+    source: 'reinfolib-XKT002',
+    'source-layer': 'hits',
+    paint: {
+      'fill-color': [
+        'case',
+        ['==', ['get', 'youto_id'], 1],
+        '#ffcccc', // Red for residential land
+        ['==', ['get', 'youto_id'], 2],
+        '#ccffcc', // Green for agricultural land
+        ['==', ['get', 'youto_id'], 3],
+        '#ccccff', // Blue for forest land
+        '#cccccc'  // Default gray for other types
+      ],
+      'fill-opacity': 0.5
+    }
+  })
+  map.on('click', 'reinfolib-fill', (e) => {
+    console.log(e)
+    const coordinates = e.lngLat
+    const properties = e.features[0].properties
     let description = ''
     for (const [key, value] of Object.entries(properties)) {
       description += `<strong>${key}</strong>: ${value}`

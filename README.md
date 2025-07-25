@@ -14,6 +14,14 @@ Proxyを立ち上げたあとは、以下のようにします。
 
 ```bash
 npm install
+vim .env
+```
+
+```
+VITE_API_KEY=hogehoge
+```
+
+```bash
 npm run dev
 ```
 
