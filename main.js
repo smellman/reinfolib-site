@@ -10,7 +10,7 @@ maplibregl.addProtocol('reinfolib', async (params, abortController) => {
   const headers = {
     'Ocp-Apim-Subscription-Key': apikey
   }
-  const url = `https://dev.smellman.org/reinfolib-proxy/${params.url.split("://")[1]}`
+  const url = `https://dev.smellman.org/reinfolib-proxy/proxy/${params.url.split("://")[1]}`
   const response = await fetch(url, {headers, signal: abortController.signal})
   if (response.status == 200) {
     const buffer = await response.arrayBuffer()
