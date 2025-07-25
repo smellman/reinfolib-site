@@ -6,11 +6,13 @@
 
 ## 使い方
 
-現状ではProxyを経由してアクセスする必要があります。以下のサイトの手順に従ってProxyを設定してください。
+Proxy サーバの実装は `reinfolib-proxy` を参照してください。
 
-https://github.com/smellman/reinfolib-proxy
+現在、 `reinfolib-proxy` は https://dev.smellman.org/reinfolib-proxy/proxy/ で公開されています。
 
-Proxyを立ち上げたあとは、以下のようにします。
+定期的にシャットダウンされるので注意をしてください。
+
+### 開発環境の構築
 
 ```bash
 npm install
